@@ -62,12 +62,15 @@ export default function Home() {
             <motion.img
               src={IMAGES[index]}
               alt="hero"
-              className="w-full h-full"
+              className="w-full h-full rounded-md"
               style={{ scale: isInView ? scale : 1 }}
             />
           </motion.div>
         </div>
       </Wrapper>
+
+      {/* Best Blog Section */}
+
       <Wrapper>
         <h1 className="text-2xl md:text-4xl xl:text-6xl font-semibold text-center uppercase">
           Best Blog
@@ -88,10 +91,13 @@ export default function Home() {
           />
         </div>
       </Wrapper>
+
+      {/* Explore More section */}
+
       <Wrapper>
         <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl md:text-4xl xl:text-6xl font-semibold uppercase mt-24">
+          <div className="">
+            <h1 className="text-2xl md:text-4xl xl:text-6xl font-semibold uppercase">
               Explore More
             </h1>
             <h3 className="text-base md:text-lg xl:text-xl mt-4">
@@ -99,8 +105,48 @@ export default function Home() {
               world
             </h3>
           </div>
-          <p className="uppercase">ACADEMY</p>
+          <p className="uppercase">PLACES</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-16 mt-16">
+          <CardOverlay
+            src="/woman-eyes.jpg"
+            name="Nindia Prameswari Putri Cahyono"
+            role="Journalist Expert"
+          />
+          <CardOverlay
+            src="/image2.jpg"
+            name="Nindia Prameswari Putri Cahyono"
+            role="Journalist Expert"
+          />
+        </div>
+      </Wrapper>
 
+      {/* Academy Section */}
+
+      <Wrapper>
+        <div className="flex flex-row-reverse justify-between items-center">
+          <div className="">
+            <h1 className="text-2xl md:text-4xl xl:text-6xl font-semibold uppercase text-right">
+              Need a hand?
+            </h1>
+            <h3 className="text-base md:text-lg xl:text-xl mt-4 text-right">
+              Our team have a professional experiences in writing, coding, and a
+              lot of stuff
+            </h3>
+          </div>
+          <p className="uppercase">ACADEMY</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-16 mt-16">
+          <CardOverlay
+            src="/woman-eyes.jpg"
+            name="Nindia Prameswari Putri Cahyono"
+            role="Journalist Expert"
+          />
+          <CardOverlay
+            src="/image2.jpg"
+            name="Nindia Prameswari Putri Cahyono"
+            role="Journalist Expert"
+          />
         </div>
       </Wrapper>
     </>
