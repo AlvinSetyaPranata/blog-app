@@ -19,7 +19,7 @@ export default function Navbar() {
           />
         </svg>
 
-        <img src="/logo.svg" alt="logo" className="size-6" />
+        <img src="/logo.svg" alt="logo" className="size-6 md:size-8" />
       </div>
       <button>
         <svg
