@@ -27,7 +27,7 @@ final class BlogController extends AbstractController
     {
         $query = $em->getRepository(Blog::class)->findAll();
 
-        $serializedData = $serializer->normalize($query, 'json', ['groups' => 'blog:read']);
+        $serializedData = $serializer->serialize($query, 'json', ['groups' => 'blog:read']);
 
         return new JsonResponse(['messege' => 'OK', 'data' => $serializedData], JsonResponse::HTTP_OK);
     }
