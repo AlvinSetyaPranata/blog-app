@@ -16,22 +16,22 @@ class User
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user:read'])]
+    #[Groups(['post:read', 'user:read'])]
     private ?int $id = null;
     
-    #[Groups(['user:read'])]
+    #[Groups(['post:read', 'user:read'])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
     
-    #[Groups(['user:read'])]
+    #[Groups(['post:read', 'user:read'])]
     #[ORM\Column(length: 1)]
     private ?string $gender = null;
     
-    #[Groups(['user:read'])]
+    #[Groups(['post:read', 'user:read'])]
     #[ORM\Column]
     private ?int $age = null;
     
-    #[Groups(['user:read'])]
+    #[Groups(['post:read', 'user:read'])]
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $date_registered = null;
 
