@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
 final class PostController extends AbstractController
@@ -22,12 +23,15 @@ final class PostController extends AbstractController
     }
 
     #[Route('/api/post', name: 'app_post', methods: ["GET"])]
-    public function index(EntityManagerInterface $em): JsonResponse
+    public function index(EntityManagerInterface $em, SerializerInterface $serializer): JsonResponse
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/PostController.php',
-        ]);
+        $query = $em->getRepository(Post::class)->findAll();
+
+
+        $serializedData = $serializer->normalize($query, 'json', ['groups' => 'post:read']);
+
+        return new JsonResponse(['messege' => 'OK', 'data' => $serializedData], JsonResponse::HTTP_OK);
+
     }
 
     #[Route('/api/post', name: 'app_add_post', methods: ["POST"])]
@@ -36,11 +40,11 @@ final class PostController extends AbstractController
 
         $data = $request->request->all();
 
-        if (!isset($data["title"], $data['content'], $data["author_id"])) {
+        if (!isset($data["title"], $data['content'], $data["author"])) {
             return new JsonResponse(['messege' => 'Invalid Request'], JsonResponse::HTTP_BAD_REQUEST);
         }
 
-        $user = $em->getRepository(User::class)->find($data["author_id"]);
+        $user = $em->getRepository(User::class)->find($data["author"]);
 
         if (!$user) {
             return new JsonResponse(['messege' => 'Failed to find a user that requested'], JsonResponse::HTTP_NOT_FOUND);
