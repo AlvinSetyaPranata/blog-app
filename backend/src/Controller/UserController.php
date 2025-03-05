@@ -9,7 +9,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Doctrine\ORM\EntityManagerInterface;
 
 final class UserController extends AbstractController
@@ -17,9 +16,9 @@ final class UserController extends AbstractController
     #[Route('/api/user', name: 'app_user', methods: ['GET'])]
     public function index(EntityManagerInterface $em, SerializerInterface $serializer): JsonResponse
     {
-        $repo = $em->getRepository(User::class)->findAll();
+        $query = $em->getRepository(User::class)->findAll();
 
-        $res = $serializer->normalize($repo, null, ['groups' => 'user:read']);
+        $res = $serializer->normalize($query, null, ['groups' => 'user:read']);
     
         return $this->json(['messege' => 'ok', 'data' => $res]);
     }
