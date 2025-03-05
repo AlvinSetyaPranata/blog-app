@@ -63,7 +63,11 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
-        ]
+        ],
+        "dev" : "symfony server:start",
+        "makemigrations" : "php bin/console make:migration",
+        "migrate" : "php bin/console doctrine:migrations:migrate",
+        "console" : "php bin/console "
     },
     "conflict": {
         "symfony/symfony": "*"
