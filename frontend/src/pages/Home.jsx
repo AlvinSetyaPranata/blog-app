@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import Wrapper from "../components/layouts/Wrapper";
-import { delay, easeIn, motion, useInView, useScroll, useTransform } from "framer-motion";
+import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import CardOverlay from "../components/CardOverlay";
 
 const IMAGES = ["/woman-eyes.jpg", "/image2.jpg"];
@@ -15,6 +15,17 @@ export default function Home() {
   const scale = useTransform(scrollY, [0, 300], [1, 0.5]);
 
   const [index, setIndex] = useState(0);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const getData = async () => {
+      await fetch(`${import.meta.env.VITE_BASE_API_URL}/blogs`)
+        .then((res) => res.json())
+        .then((data) => setData(data.data));
+    };
+
+    getData();
+  }, []);
 
   useEffect(() => {
     if (isInView && window.innerWidth >= 768) {
@@ -34,8 +45,7 @@ export default function Home() {
   return (
     <>
       <Wrapper>
-        <h1
-        className="text-4xl md:text-6xl xl:text-8xl font-semibold text-center uppercas">
+        <h1 className="text-4xl md:text-6xl xl:text-8xl font-semibold text-center uppercas">
           publica más, gana más
         </h1>
         <h3 className="text-center text-base md:text-lg xl:text-xl mt-6">
@@ -59,13 +69,13 @@ export default function Home() {
             className="rounded-md md:mt-32 static md:sticky top-5 left-0 min-h-[800px] overflow-hidden"
           >
             <motion.img
-              initial={{ y: '100%', opacity: 0}}
-              animate={{ y: 0, opacity: 100}}
+              initial={{ y: "100%", opacity: 0 }}
+              animate={{ y: 0, opacity: 100 }}
               transition={{ type: "tween", duration: 0.5, ease: "easeOut" }}
               src={IMAGES[index]}
               alt="hero"
               className="w-max h-max md:w-full md:h-full rounded-md aspect-[4 / 3]"
-              style={{ scale: (isInView && window.innerWidth > 768) ? scale : 1 }}
+              style={{ scale: isInView && window.innerWidth > 768 ? scale : 1 }}
             />
           </div>
         </div>
@@ -81,16 +91,14 @@ export default function Home() {
           The most viewed blog nowdays
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-16 mt-16">
-          <CardOverlay
-            src="/woman-eyes.jpg"
-            name="Nindia Prameswari Putri Cahyono"
-            role="Journalist Expert"
-          />
-          <CardOverlay
-            src="/image2.jpg"
-            name="Nindia Prameswari Putri Cahyono"
-            role="Journalist Expert"
-          />
+          {data.map((blogData, index) => (
+            <CardOverlay
+              src="/woman-eyes.jpg"
+              title={blogData.title}
+              desc={blogData.author.name}
+              key={index}
+            />
+          ))}
         </div>
       </Wrapper>
 
@@ -128,13 +136,13 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-16 mt-16">
           <CardOverlay
             src="/woman-eyes.jpg"
-            name="Nindia Prameswari Putri Cahyono"
-            role="Journalist Expert"
+            title="Tatapan si pekerja keras"
+            desc="Nindia Prameswari Putri Cahyono"
           />
           <CardOverlay
             src="/image2.jpg"
-            name="Nindia Prameswari Putri Cahyono"
-            role="Journalist Expert"
+            title="Nindia Prameswari Putri Cahyono"
+            desc="Journalist Expert"
           />
         </div>
       </Wrapper>
