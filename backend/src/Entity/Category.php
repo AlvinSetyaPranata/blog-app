@@ -14,15 +14,15 @@ class Category
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['category:read'])]
+    #[Groups(['category:read', 'blog:read'])]
     private ?int $id = null;
 
-    #[ORM\Column(length: 100)]
-    #[Groups(['category:read'])]
+    #[ORM\Column(length: 100, unique: true)]
+    #[Groups(['category:read', 'blog:read'])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(['category:read'])]
+    #[Groups(['category:read', 'blog:read'])]
     private ?\DateTimeInterface $date_created = null;
 
     public function getId(): ?int

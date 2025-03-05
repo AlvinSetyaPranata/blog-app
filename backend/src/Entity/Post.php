@@ -18,7 +18,7 @@ class Post
     private ?int $id = null;
 
     #[Groups(['post:read'])]
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $title = null;
 
     #[Groups(['post:read'])]

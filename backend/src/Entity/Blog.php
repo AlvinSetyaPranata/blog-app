@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\BlogRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -17,7 +19,7 @@ class Blog
     #[Groups(['blog:read'])]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     #[Groups(['blog:read'])]
     private ?string $title = null;
 
@@ -30,22 +32,26 @@ class Blog
     #[Groups(['blog:read'])]
     private ?User $author = null;
 
+    #[ORM\ManyToMany(targetEntity: Category::class)]
+    #[Groups(['blog:read'])]
+    private Collection $categories;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['blog:read'])]
-    private ?stirng $image = null;
-
+    private ?string $image = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Groups(['blog:read'])]
     private ?\DateTimeInterface $date_created = null;
-    
-    
-    
+
+    public function __construct()
+    {
+        $this->categories = new ArrayCollection(); 
+    }
 
     public function getId(): ?int
     {
-      return $this->id;
+        return $this->id;
     }
 
     public function getTitle(): ?string
@@ -56,7 +62,6 @@ class Blog
     public function setTitle(string $title): static
     {
         $this->title = $title;
-
         return $this;
     }
 
@@ -65,24 +70,21 @@ class Blog
         return $this->content;
     }
 
+    public function setContent(?string $content): static
+    {
+        $this->content = $content;
+        return $this;
+    }
+
     public function getImage(): ?string
     {
         return $this->image;
     }
 
-    public function setContent(?string $content): static
-    {
-        $this->content = $content;
-
-        return $this;
-    }
-
-
     public function setImage(?string $image): static
     {
         $this->image = $image;
-
-        return  $this;
+        return $this;
     }
 
     public function getAuthor(): ?User
@@ -93,7 +95,25 @@ class Blog
     public function setAuthor(?User $author): static
     {
         $this->author = $author;
+        return $this;
+    }
 
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
+    public function addCategory(Category $category): self
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories->add($category);
+        }
+        return $this;
+    }
+
+    public function removeCategory(Category $category): self
+    {
+        $this->categories->removeElement($category);
         return $this;
     }
 
@@ -106,7 +126,7 @@ class Blog
     public function setCreatedAtValue(): void
     {
         if ($this->date_created === null) {
-            $this->date_created = new \DateTime(); // Sets current datetime
+            $this->date_created = new \DateTime();
         }
     }
 }

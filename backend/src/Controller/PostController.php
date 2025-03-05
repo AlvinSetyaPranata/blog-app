@@ -52,7 +52,7 @@ final class PostController extends AbstractController
         $post = new Post();
         $post->setTitle($data["title"]);
         $post->setContent($data["content"]);
-        $post->setAuthorId($user);
+        $post->setAuthor($user);
 
         $em->persist($post);
         $em->flush();

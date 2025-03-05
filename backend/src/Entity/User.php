@@ -20,7 +20,7 @@ class User
     private ?int $id = null;
     
     #[Groups(['post:read', 'user:read', 'blog:read'])]
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $name = null;
     
     #[Groups(['post:read', 'user:read', 'blog:read'])]
@@ -39,7 +39,7 @@ class User
      * @var Collection<int, Post>
      */
     #[Groups(['user:read'])]
-    #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'author_id', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'author', orphanRemoval: true)]
     private Collection $posts;
 
     public function __construct()

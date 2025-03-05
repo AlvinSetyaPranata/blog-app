@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Blog;
+use App\Entity\Category;
 use App\Entity\User;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -29,15 +30,17 @@ final class BlogController extends AbstractController
 
         $serializedData = $serializer->serialize($query, 'json', ['groups' => 'blog:read']);
 
-        return new JsonResponse(['messege' => 'OK', 'data' => $serializedData], JsonResponse::HTTP_OK);
+        return new JsonResponse(['messege' => 'OK', 'data' => json_decode($serializedData)], JsonResponse::HTTP_OK);
     }
 
+
+    # Create
     #[Route('/api/blogs/add', name: 'add_blog', methods: ['POST'])]
     public function create(Request $request, EntityManagerInterface $em): JsonResponse
     {
         $data = $request->request->all();
 
-        if (!isset($data["title"], $data["author"])) {
+        if (!isset($data["title"], $data["author"], $data["image"])) {
             return new JsonResponse(['messege' => 'Invalid data'], JsonResponse::HTTP_BAD_REQUEST);
         }
 
@@ -49,10 +52,21 @@ final class BlogController extends AbstractController
 
         $blog = new Blog();
         $blog->setTitle($data["title"]);
+        $blog->setImage($data["image"]);
         $blog->setAuthor($user);
 
         if (isset($data["content"])) {
             $blog->setContent($data["content"]);
+        }
+
+        if (isset($data["category"])) {
+            $category = $em->getRepository(Category::class)->find($data["category"]);
+
+            if (!$category) {
+                return new JsonResponse(['messege' => 'Category with given id is not found'], JsonResponse::HTTP_NOT_FOUND);
+            }
+
+            $blog->addCategory($category);
         }
 
         $em->persist($blog);
@@ -60,4 +74,51 @@ final class BlogController extends AbstractController
 
         return new JsonResponse(['message' => 'User Created Successfully'], JsonResponse::HTTP_CREATED);
     }
+
+    # Update
+    #[Route('/api/blogs/{id}', name: 'update_blog', methods: ['PUT'])]
+    public function update(int $id, Request $request, EntityManagerInterface $em) {
+        $data = json_decode($request->getContent(), true);
+
+        if (!isset($data["title"], $data["author"], $data["image"])) {
+            return new JsonResponse(['messege' => 'Invalid data'], JsonResponse::HTTP_BAD_REQUEST);
+        }
+
+        $blog = $em->getRepository(Blog::class)->find($id);
+        $user = $em->getRepository(User::class)->find($data["author"]);
+        
+
+        if (!$blog) {
+            return new JsonResponse(['messege' => 'Blog with given id is not found'], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        if (!$user) {
+            return new JsonResponse(['messege' => 'User with given id is not found'], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        $blog->setTitle($data["title"]);
+        $blog->setImage($data["image"]);
+        $blog->setAuthor($user);
+
+        if (isset($data["content"])) {
+            $blog->setContent($data["content"]);
+        }
+
+        if (isset($data["category"])) {
+            $category = $em->getRepository(Category::class)->find($data["category"]);
+
+            if (!$category) {
+                return new JsonResponse(['messege' => 'Category with given id is not found'], JsonResponse::HTTP_NOT_FOUND);
+            }
+
+            $blog->addCategory($category);
+        }
+
+        $em->persist($blog);
+        $em->flush();
+
+        return new JsonResponse(JsonResponse::HTTP_NO_CONTENT); 
+    }
+
+    
 }

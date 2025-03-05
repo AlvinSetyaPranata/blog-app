@@ -85,20 +85,18 @@ export default function Home() {
 
       <Wrapper>
         <h1 className="text-2xl md:text-4xl xl:text-6xl font-semibold text-center uppercase">
-          Best Blogs
+          Blog Of The Day
         </h1>
         <h3 className="text-center text-base md:text-lg xl:text-xl mt-6">
           The most viewed blog nowdays
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-16 mt-16">
-          {data.map((blogData, index) => (
             <CardOverlay
               src="/woman-eyes.jpg"
               title={blogData.title}
               desc={blogData.author.name}
               key={index}
             />
-          ))}
         </div>
       </Wrapper>
 
