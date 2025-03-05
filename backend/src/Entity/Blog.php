@@ -24,15 +24,24 @@ class Blog
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['blog:read'])]
     private ?string $content = null;
-
+    
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['blog:read'])]
     private ?User $author = null;
 
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['blog:read'])]
+    private ?stirng $image = null;
+
+
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Groups(['blog:read'])]
     private ?\DateTimeInterface $date_created = null;
+    
+    
+    
 
     public function getId(): ?int
     {
@@ -56,11 +65,24 @@ class Blog
         return $this->content;
     }
 
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
     public function setContent(?string $content): static
     {
         $this->content = $content;
 
         return $this;
+    }
+
+
+    public function setImage(?string $image): static
+    {
+        $this->image = $image;
+
+        return  $this;
     }
 
     public function getAuthor(): ?User
