@@ -16,11 +16,12 @@ use Doctrine\ORM\EntityManagerInterface;
 final class UserController extends AbstractController
 {
     #[Route('/api/user', name: 'app_user', methods: ['GET'])]
-    public function index(UserRepository $repository, SerializerInterface $serializer): JsonResponse
+    public function index(EntityManagerInterface $em, SerializerInterface $serializer): JsonResponse
     {
-        $res = $serializer->normalize($repository->findAll(), null, ['groups' => 'user:read']);
-    
+        $repo = $em->getRepository(User::class)->findAll();
 
+        $res = $serializer->normalize($repo, null, ['groups' => 'user:read']);
+    
         return $this->json(['messege' => 'ok', 'data' => $res]);
     }
 
