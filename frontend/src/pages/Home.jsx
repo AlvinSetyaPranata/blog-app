@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import Wrapper from "../components/layouts/Wrapper";
-import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import { delay, easeIn, motion, useInView, useScroll, useTransform } from "framer-motion";
 import CardOverlay from "../components/CardOverlay";
 
 const IMAGES = ["/woman-eyes.jpg", "/image2.jpg"];
@@ -17,10 +17,8 @@ export default function Home() {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    if (isInView) {
+    if (isInView && window.innerWidth >= 768) {
       const unsubcribe = scrollY.on("change", (y) => {
-        console.log(y);
-
         if (y <= 571) {
           setIndex(0);
         }
@@ -36,36 +34,40 @@ export default function Home() {
   return (
     <>
       <Wrapper>
-        <h1 className="text-4xl md:text-6xl xl:text-8xl font-semibold text-center uppercase">
+        <h1
+        className="text-4xl md:text-6xl xl:text-8xl font-semibold text-center uppercas">
           publica más, gana más
         </h1>
         <h3 className="text-center text-base md:text-lg xl:text-xl mt-6">
           Publish or Search anything in one place
         </h3>
 
-        <div className="relative min-h-[2000px]">
+        <div className="relative h-[200px] md:h-[2000px] mt-8">
           {/* start content */}
-          <h1 className="font-bold text-4xl rotate-[20deg] absolute top-[15%] right-0">
+          <h1 className="font-bold text-4xl rotate-[20deg] absolute top-[30%] right-0 hidden md:block">
             Be a hero not zero
           </h1>
 
-          <h1 className="font-bold text-4xl -rotate-[20deg] absolute top-[45%] left-0">
+          <h1 className="font-bold text-4xl -rotate-[20deg] absolute top-[60%] left-0 hidden md:block">
             Be a professional not ego
           </h1>
 
           {/* end content */}
 
-          <motion.div
+          <div
             ref={imageRef}
-            className="rounded-md mt-32 sticky top-5 left-0 h-[800px]"
+            className="rounded-md md:mt-32 static md:sticky top-5 left-0 min-h-[800px] overflow-hidden"
           >
             <motion.img
+              initial={{ y: '100%', opacity: 0}}
+              animate={{ y: 0, opacity: 100}}
+              transition={{ type: "tween", duration: 0.5, ease: "easeOut" }}
               src={IMAGES[index]}
               alt="hero"
-              className="w-full h-full rounded-md"
-              style={{ scale: isInView ? scale : 1 }}
+              className="w-max h-max md:w-full md:h-full rounded-md aspect-[4 / 3]"
+              style={{ scale: (isInView && window.innerWidth > 768) ? scale : 1 }}
             />
-          </motion.div>
+          </div>
         </div>
       </Wrapper>
 
@@ -73,7 +75,7 @@ export default function Home() {
 
       <Wrapper>
         <h1 className="text-2xl md:text-4xl xl:text-6xl font-semibold text-center uppercase">
-          Best Blog
+          Best Blogs
         </h1>
         <h3 className="text-center text-base md:text-lg xl:text-xl mt-6">
           The most viewed blog nowdays
@@ -105,7 +107,23 @@ export default function Home() {
               world
             </h3>
           </div>
-          <p className="uppercase">PLACES</p>
+          <a href="#" className="flex items-center gap-x-2">
+            Learn more
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="size-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+              />
+            </svg>
+          </a>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-16 mt-16">
           <CardOverlay
@@ -134,7 +152,23 @@ export default function Home() {
               lot of stuff
             </h3>
           </div>
-          <p className="uppercase">ACADEMY</p>
+          <a href="#" className="flex items-center gap-x-2">
+            Learn more
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="size-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+              />
+            </svg>
+          </a>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-16 mt-16">
           <CardOverlay
