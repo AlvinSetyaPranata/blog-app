@@ -18,6 +18,9 @@ class Post
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $content = null;
+
     #[ORM\ManyToOne(inversedBy: 'posts')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $author_id = null;
@@ -30,9 +33,21 @@ class Post
         return $this->id;
     }
 
+    public function getContent(): ?string
+    {
+        return $this->content;
+    }
+
     public function getTitle(): ?string
     {
         return $this->title;
+    }
+
+    public function setContent(string $content): static
+    {
+        $this->content = $content;
+
+        return $this;
     }
 
     public function setTitle(string $title): static
