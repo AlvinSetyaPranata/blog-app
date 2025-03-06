@@ -39,9 +39,9 @@ export default function Navbar() {
       </button>
 
       <div className="items-center gap-x-8 text-sm font-normal hidden md:flex">
-        <h3 className="border-b-2 border-transparent hover:border-black hover:cursor-pointer">
+        <a href="/login" className="border-b-2 border-transparent hover:border-black hover:cursor-pointer">
           Login
-        </h3>
+        </a>
         <h3 className="border-b-2 border-transparent hover:border-black hover:cursor-pointer">
           Signup
         </h3>
