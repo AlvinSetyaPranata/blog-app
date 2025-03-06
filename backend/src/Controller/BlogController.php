@@ -24,14 +24,26 @@ final class BlogController extends AbstractController
     }
 
     #[Route('/api/blogs', name: 'app_blog', methods: ['GET'])]
-    public function index(EntityManagerInterface $em, SerializerInterface $serializer): JsonResponse
+    public function index(EntityManagerInterface $em, SerializerInterface $serializer, Request $request): JsonResponse
     {
+        $category = $request->query->get('categories');
+
+        if ($category) {
+            $query = $em->getRepository(Blog::class)->findByCategoryName($category);
+
+            $serializedData = $serializer->serialize($query, 'json', ['groups' => 'blog:read']);
+
+            return new JsonResponse(['messege' => 'OK', 'data' => json_decode($serializedData)], JsonResponse::HTTP_OK);
+        }
+
+
         $query = $em->getRepository(Blog::class)->findAll();
 
         $serializedData = $serializer->serialize($query, 'json', ['groups' => 'blog:read']);
 
         return new JsonResponse(['messege' => 'OK', 'data' => json_decode($serializedData)], JsonResponse::HTTP_OK);
     }
+
 
 
     # Create
