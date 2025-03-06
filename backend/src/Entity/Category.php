@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CategoryRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -24,6 +26,33 @@ class Category
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Groups(['category:read', 'blog:read'])]
     private ?\DateTimeInterface $date_created = null;
+
+    #[ORM\ManyToMany(targetEntity: Blog::class, mappedBy: "categories")]
+    private Collection $blogs;
+
+    public function __construct()
+    {
+        $this->blogs = new ArrayCollection();
+    }
+
+    public function getBlogs(): Collection
+    {
+        return $this->blogs;
+    }
+
+    public function addBlog(Blog $blog): self
+    {
+        if (!$this->blogs->contains($blog)) {
+            $this->blogs->add($blog);
+        }
+        return $this;
+    }
+
+    public function removeBlog(Blog $blog): self
+    {
+        $this->blogs->removeElement($blog);
+        return $this;
+    }
 
     public function getId(): ?int
     {
