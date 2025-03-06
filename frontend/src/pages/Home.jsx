@@ -15,17 +15,19 @@ export default function Home() {
   const scale = useTransform(scrollY, [0, 300], [1, 0.5]);
 
   const [index, setIndex] = useState(0);
-  const [data, setData] = useState([]);
+  const [botd, setBotd] = useState({});
 
   useEffect(() => {
     const getData = async () => {
-      await fetch(`${import.meta.env.VITE_BASE_API_URL}/blogs`)
+      await fetch(`${import.meta.env.VITE_BASE_API_URL}/blogs?categories=botd`)
         .then((res) => res.json())
-        .then((data) => setData(data.data));
+        .then((data) => setBotd(data.data));
     };
 
     getData();
   }, []);
+
+  // useEffect(() => console.log(botd), [botd])
 
   useEffect(() => {
     if (isInView && window.innerWidth >= 768) {
@@ -43,7 +45,7 @@ export default function Home() {
   }, [isInView, scrollY]);
 
   return (
-    <>
+    <div className="space-y-32">
       <Wrapper>
         <h1 className="text-4xl md:text-6xl xl:text-8xl font-semibold text-center uppercas">
           publica más, gana más
@@ -72,7 +74,7 @@ export default function Home() {
               initial={{ y: "100%", opacity: 0 }}
               animate={{ y: 0, opacity: 100 }}
               transition={{ type: "tween", duration: 0.5, ease: "easeOut" }}
-              src={IMAGES[index]}
+              src={botd ? botd.image : ""}
               alt="hero"
               className="w-max h-max md:w-full md:h-full rounded-md aspect-[4 / 3]"
               style={{ scale: isInView && window.innerWidth > 768 ? scale : 1 }}
@@ -87,16 +89,15 @@ export default function Home() {
         <h1 className="text-2xl md:text-4xl xl:text-6xl font-semibold text-center uppercase">
           Blog Of The Day
         </h1>
-        <h3 className="text-center text-base md:text-lg xl:text-xl mt-6">
+        <h3 className="text-center text-base md:text-lg xl:text-xl mt-4">
           The most viewed blog nowdays
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-16 mt-16">
-            <CardOverlay
-              src="/woman-eyes.jpg"
-              title={blogData.title}
-              desc={blogData.author.name}
-              key={index}
-            />
+        <div className="mt-12">
+          <CardOverlay
+            src="/woman-eyes.jpg"
+            title={botd ? botd.title : ""}
+            desc={botd.author ? botd.author.name : ""}
+          />
         </div>
       </Wrapper>
 
@@ -106,7 +107,7 @@ export default function Home() {
         <div className="flex justify-between items-center">
           <div className="">
             <h1 className="text-2xl md:text-4xl xl:text-6xl font-semibold uppercase">
-              Explore More
+              Nominees
             </h1>
             <h3 className="text-base md:text-lg xl:text-xl mt-4">
               Explore others beautiful blogs written by people from around the
@@ -189,6 +190,6 @@ export default function Home() {
           />
         </div>
       </Wrapper>
-    </>
+    </div>
   );
 }
