@@ -1,48 +1,39 @@
 import React, { useEffect, useRef, useState } from "react";
 import Wrapper from "../components/layouts/Wrapper";
-import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import {
+  motion,
+  useInView,
+  useMotionValue,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 import CardOverlay from "../components/CardOverlay";
-
-const IMAGES = ["/woman-eyes.jpg", "/image2.jpg"];
 
 export default function Home() {
   const { scrollY } = useScroll();
   const imageRef = useRef(null);
+
+
   const isInView = useInView(imageRef, {
     margin: "-40% 0px -40% 0px",
     once: true,
   });
-  const scale = useTransform(scrollY, [0, 300], [1, 0.5]);
 
-  const [index, setIndex] = useState(0);
   const [botd, setBotd] = useState({});
 
   useEffect(() => {
     const getData = async () => {
       await fetch(`${import.meta.env.VITE_BASE_API_URL}/blogs?categories=botd`)
         .then((res) => res.json())
-        .then((data) => setBotd(data.data));
+        .then((data) => setBotd(data.data))
+        .catch((err) => console.log(err));
     };
 
     getData();
   }, []);
 
+
   // useEffect(() => console.log(botd), [botd])
-
-  useEffect(() => {
-    if (isInView && window.innerWidth >= 768) {
-      const unsubcribe = scrollY.on("change", (y) => {
-        if (y <= 571) {
-          setIndex(0);
-        }
-        if (y > 1103) {
-          setIndex(1);
-        }
-      });
-
-      return () => unsubcribe();
-    }
-  }, [isInView, scrollY]);
 
   return (
     <div className="space-y-32">
@@ -56,12 +47,24 @@ export default function Home() {
 
         <div className="relative h-[200px] md:h-[2000px] mt-8">
           {/* start content */}
-          <h1 className="font-bold text-4xl rotate-[20deg] absolute top-[30%] right-0 hidden md:block">
-            Be a hero not zero
+          <img
+            src="image2.jpg"
+            className="absolute top-[30%] right-0 hidden md:block w-[25%] origin-center rotate-45"
+            alt="nominees"
+          />
+
+          <h1 className="font-bold text-4xl rotate-45 absolute top-[45%] right-0 hidden md:block origin-center">
+            Don't be bussy be productive
           </h1>
 
-          <h1 className="font-bold text-4xl -rotate-[20deg] absolute top-[60%] left-0 hidden md:block">
-            Be a professional not ego
+          <img
+            src="image2.jpg"
+            className="absolute top-[60%] left-0 hidden md:block w-[25%] origin-center -rotate-45"
+            alt="nominees"
+          />
+
+          <h1 className="font-bold text-4xl -rotate-45 absolute top-[80%] left-0 hidden md:block origin-center">
+            Don't be bussy be productive
           </h1>
 
           {/* end content */}
@@ -74,7 +77,7 @@ export default function Home() {
               initial={{ y: "100%", opacity: 0 }}
               animate={{ y: 0, opacity: 100 }}
               transition={{ type: "tween", duration: 0.5, ease: "easeOut" }}
-              src={botd ? botd.image : ""}
+              src="/woman-eyes.jpg"
               alt="hero"
               className="w-max h-max md:w-full md:h-full rounded-md aspect-[4 / 3]"
               style={{ scale: isInView && window.innerWidth > 768 ? scale : 1 }}
