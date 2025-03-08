@@ -3,97 +3,106 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
-use Symfony\Component\Serializer\Annotation\Groups;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\HasLifecycleCallbacks]
-class User
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user:read', 'blog:read', 'post:read'])]
     private ?int $id = null;
-    
-    #[Groups(['user:read', 'blog:read', 'post:read'])]
-    #[ORM\Column(length: 255, unique: true)]
-    private ?string $name = null;
-    
-    #[Groups(['user:read', 'blog:read', 'post:read'])]
-    #[ORM\Column(length: 1)]
-    private ?string $gender = null;
-    
-    #[Groups(['user:read', 'blog:read', 'post:read'])]
-    #[ORM\Column]
-    private ?int $age = null;
-    
-    #[Groups(['user:read', 'blog:read', 'post:read'])]
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $date_registered = null;
+
+    #[ORM\Column(length: 180)]
+    private ?string $email = null;
 
     /**
-     * @var Collection<int, Post>
+     * @var list<string> The user roles
      */
-    
+    #[ORM\Column]
+    private array $roles = [];
+
+    /**
+     * @var string The hashed password
+     */
+    #[ORM\Column]
+    private ?string $password = null;
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getEmail(): ?string
     {
-        return $this->name;
+        return $this->email;
     }
 
-    public function setName(string $name): static
+    public function setEmail(string $email): static
     {
-        $this->name = $name;
+        $this->email = $email;
+
         return $this;
     }
 
-    public function getGender(): ?string
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
     {
-        return $this->gender;
+        return (string) $this->email;
     }
 
-    public function setGender(string $gender): static
+    /**
+     * @see UserInterface
+     *
+     * @return list<string>
+     */
+    public function getRoles(): array
     {
-        $this->gender = $gender;
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    /**
+     * @param list<string> $roles
+     */
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+
         return $this;
     }
 
-    public function getAge(): ?int
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): ?string
     {
-        return $this->age;
+        return $this->password;
     }
 
-    public function setAge(int $age): static
+    public function setPassword(string $password): static
     {
-        $this->age = $age;
+        $this->password = $password;
+
         return $this;
     }
 
-    public function getDateRegistered(): ?\DateTimeInterface
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials(): void
     {
-        return $this->date_registered;
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
-
-    public function setDateRegistered(?\DateTimeInterface $date_registered): static
-    {
-        $this->date_registered = $date_registered;
-        return $this;
-    }
-
-    #[ORM\PrePersist]
-    public function onPrePersist(): void
-    {
-        if ($this->date_registered === null) {
-            $this->date_registered = new \DateTime(); // Auto-set before persisting
-        }
-    }
-
-    
 }
