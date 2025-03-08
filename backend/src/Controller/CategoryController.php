@@ -62,4 +62,18 @@ final class CategoryController extends AbstractController
         $em->persist($category);
         $em->flush();
     }
+
+    #[Route('/api/category/{id}', name: 'delete_category', methods: ['DELETE'])]
+    public function delete(int $id, EntityManagerInterface $em) {
+        $category = $em->getRepository(Category::class)->find($id);
+
+        if (!$category) {
+            return new JsonResponse(['messege' => "Category with given id, is not found"], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        $em->remove($category);
+        $em->flush();
+
+        return new JsonResponse(JsonResponse::HTTP_NO_CONTENT);
+    }
 }
