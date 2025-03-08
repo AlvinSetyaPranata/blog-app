@@ -17,9 +17,6 @@ use Doctrine\ORM\EntityManagerInterface;
 final class BlogController extends AbstractController
 {
 
-    public function __construct(RequestStack $requestStack) {
-        $this->requestStack = $requestStack;
-    }
 
     #[Route('/api/blogs', name: 'app_blog', methods: ['GET'])]
     public function index(EntityManagerInterface $em, SerializerInterface $serializer, Request $request): JsonResponse

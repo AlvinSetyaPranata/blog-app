@@ -15,11 +15,6 @@ use Doctrine\ORM\EntityManagerInterface;
 
 final class PostController extends AbstractController
 {
-    private RequestStack $requestStack;
-
-    public function __construct(RequestStack $requestStack) {
-        $this->requestStack = $requestStack;
-    }
 
     #[Route('/api/post', name: 'app_post', methods: ["GET"])]
     public function index(EntityManagerInterface $em, SerializerInterface $serializer): JsonResponse
