@@ -39,16 +39,24 @@ final class PostController extends AbstractController
 
         $data = $request->request->all();
 
+
         if (!isset($data["title"], $data['content'], $data["author"])) {
             return new JsonResponse(['messege' => 'Invalid Request'], JsonResponse::HTTP_BAD_REQUEST);
         }
 
         $user = $em->getRepository(User::class)->find($data["author"]);
-
+        
         if (!$user) {
             return new JsonResponse(['messege' => 'Failed to find a user that requested'], JsonResponse::HTTP_NOT_FOUND);
         }
 
+        $posts = $em->getRepository(Post::class)->findByTitle($data["title"]);
+
+
+        if ($posts) {
+            return new JsonResponse(['messege' => 'Given title is already exists'], JsonResponse::HTTP_CONFLICT);
+        }
+        
         $post = new Post();
         $post->setTitle($data["title"]);
         $post->setContent($data["content"]);
