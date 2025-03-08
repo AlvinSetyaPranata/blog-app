@@ -16,6 +16,16 @@ class PostRepository extends ServiceEntityRepository
         parent::__construct($registry, Post::class);
     }
 
+    public function findByTitle(string $title): ?Post
+    {
+        return $this
+            ->createQueryBuilder('p')
+            ->where('p.title = :title')
+            ->setParameter("title", $title)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     //    /**
     //     * @return Post[] Returns an array of Post objects
     //     */
