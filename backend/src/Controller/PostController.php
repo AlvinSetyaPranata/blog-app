@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Post;
 use App\Entity\User;
-
+use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +24,7 @@ final class PostController extends AbstractController
 
         $data = $serializer->serialize($query, 'json', ['groups' => 'post:read']);
 
-        return new JsonResponse(['messege' => 'OK', 'data' => json_decode($data, true)], JsonResponse::HTTP_OK);
+        return new JsonResponse(['messege' => 'OK', 'data' => json_decode($data, true)]);
 
     }
 
@@ -62,4 +62,45 @@ final class PostController extends AbstractController
         
         return new JsonResponse(['messege' => 'New post has been created!'], JsonResponse::HTTP_CREATED);
     }
+
+    #[Route('/api/post/{id}', name: 'update_post', methods: ["PUT"])]
+    public function update(int $id, EntityManagerInterface $em, Request $request): JsonResponse
+    {
+        $reqData = json_decode($request->getContent(), true);
+        
+        if (!isset($reqData["title"], $reqData["content"])) {
+            return new JsonResponse(['messege' => 'Invalid Request'], JsonResponse::HTTP_BAD_REQUEST);
+        }
+
+        $post = $em->getRepository(Post::class)->find($id);
+
+        if (!$post) {
+            return new JsonResponse(['messege' => 'Post with given id is not found!'], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        $post->setTitle($reqData["title"]);
+        $post->setContent($reqData["content"]);
+
+        $em->persist($post);
+        $em->flush();
+
+        return new JsonResponse(JsonResponse::HTTP_NO_CONTENT);
+    }
+
+    #[Route('/api/post/{id}', name: 'delete_post', methods: ["DELETE"])]
+    public function delete(int $id, EntityManagerInterface $em){
+        $post = $em->getRepository(Post::class)->find($id);
+
+        if (!$post) {
+            return new JsonResponse(['messege' => 'Post with given id is not found'], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        $em->remove($post);
+        $em->flush();
+
+        return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
+
+    }
 }
+
+// Add delete
