@@ -27,6 +27,16 @@ class BlogRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    public function findByName(string $name): ?Blog
+    {
+        return $this->createQueryBuilder('b')
+                ->where('b.name = :name')
+                ->setParameter('name', $name)
+                ->setMaxResults(1)
+                ->getQuery()
+                ->getOneOrNullResult();
+    }
+
 
 
     //    public function findOneBySomeField($value): ?Blog

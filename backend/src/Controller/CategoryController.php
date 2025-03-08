@@ -30,6 +30,12 @@ final class CategoryController extends AbstractController
             return new JsonResponse(['messege' => 'Invalid Request'], JsonResponse::HTTP_BAD_REQUEST);
         }
 
+        $category = $em->getRepository(Category::class)->findByName($data["name"]);
+        
+        if ($category) {
+            return new JsonResponse(['messege' => 'Category has alraedy exists!'], JsonResponse::HTTP_CONFLICT);
+        }
+        
         $category = new Category();
         $category->setName($data["name"]);
 
@@ -37,5 +43,23 @@ final class CategoryController extends AbstractController
         $em->flush();
 
         return new JsonResponse(['messege' => $data["name"]." Has been Created successfully!"], JsonResponse::HTTP_CREATED);
+    }
+
+    #[Route('/api/category/{id}', name: 'update_category', methods: ['PUT'])]
+    public function update(EntityManagerInterface $em, Request $request, int $id) {
+        $data = json_decode($request->getContent(), true);
+
+        $category = $em->getRepository(Category::class)->find($id);
+
+        if (!$category) {
+            return new JsonResponse(['messege' => 'Category with given id, is not found'], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        if (isset($data["name"])) {
+            $category->name = $data["name"];
+        }
+
+        $em->persist($category);
+        $em->flush();
     }
 }

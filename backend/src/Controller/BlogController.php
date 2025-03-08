@@ -17,8 +17,6 @@ use Doctrine\ORM\EntityManagerInterface;
 final class BlogController extends AbstractController
 {
 
-    private RequestStack $requestStack;
-
     public function __construct(RequestStack $requestStack) {
         $this->requestStack = $requestStack;
     }
@@ -131,6 +129,23 @@ final class BlogController extends AbstractController
 
         return new JsonResponse(JsonResponse::HTTP_NO_CONTENT); 
     }
+
+    #[Route('/api/blogs/{id}', name: 'update_blog', methods: ['DELETE'])]
+    public function delete(int $id, EntityManagerInterface $em) {
+
+        
+        $blog = $em->getRepository(Blog::class)->find($id);
+
+        if (!$blog) {
+            return new JsonResponse(['messege' => 'Category with given id is not found'], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        $em->remove($blog);
+        $em->flush();
+        
+        return new JsonResponse(JsonResponse::HTTP_NO_CONTENT);
+    }
+
 
     
 }
