@@ -79,7 +79,7 @@ final class BlogController extends AbstractController
         $em->persist($blog);
         $em->flush();
 
-        return new JsonResponse(['message' => 'User Created Successfully'], JsonResponse::HTTP_CREATED);
+        return new JsonResponse(['message' => 'Blog Created Successfully'], JsonResponse::HTTP_CREATED);
     }
 
     # Update
@@ -127,7 +127,7 @@ final class BlogController extends AbstractController
         return new JsonResponse(JsonResponse::HTTP_NO_CONTENT); 
     }
 
-    #[Route('/api/blogs/{id}', name: 'update_blog', methods: ['DELETE'])]
+    #[Route('/api/blogs/{id}', name: 'delete_blog', methods: ['DELETE'])]
     public function delete(int $id, EntityManagerInterface $em) {
 
         
