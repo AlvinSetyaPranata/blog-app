@@ -5,17 +5,16 @@ import { profileAtom } from "../store";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-export default function Login() {
+export default function FloatingLogin() {
   const [isVisible, setIsVisible] = useState(false);
   const [, setCredential] = useAtom(profileAtom);
-  
 
   const navigate = useNavigate();
 
   const googleAuth = useGoogleLogin({
     onSuccess: (response) => {
-      setCredential(response)
-      navigate("/")
+      setCredential(response);
+      navigate("/");
     },
   });
 
@@ -62,8 +61,12 @@ export default function Login() {
     }
   };
 
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+  }, []);
+
   return (
-    <div className="w-full min-h-screen flex">
+    <div className="fixed bottom-0 left-0 w-full min-h-screen flex bg-white z-10">
       <div className="w-full min-h-full flex-1 bg-red-500 relative">
         {/* overlay */}
         <div className="absolute top-0 left-0 w-full h-full z-99 bg-black flex flex-col justify-end text-white bg-opacity-80 pb-12 gap-y-4">
@@ -78,9 +81,10 @@ export default function Login() {
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
-              d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
+              d="M6 18 18 6M6 6l12 12"
             />
           </svg>
+
           <div className="pb-8 px-6 space-y-3">
             <h1 className="text-3xl md:text-4xl xl:text-5xl font-bold">
               Ready to change the world?

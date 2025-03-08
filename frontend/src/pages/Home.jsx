@@ -3,15 +3,19 @@ import Wrapper from "../components/layouts/Wrapper";
 import {
   motion,
   useInView,
-  useMotionValue,
   useScroll,
   useTransform,
 } from "framer-motion";
 import CardOverlay from "../components/CardOverlay";
+import { useAtom } from "jotai";
+import FloatingLogin from "../components/FloatingLogin";
+import { formVisible } from "../store";
 
 export default function Home() {
   const { scrollY } = useScroll();
   const imageRef = useRef(null);
+
+  const [FormType,] = useAtom(formVisible)
 
 
   const isInView = useInView(imageRef, {
@@ -20,13 +24,13 @@ export default function Home() {
   });
 
   const [botd, setBotd] = useState({});
+  const scale = useTransform(scrollY, [0, 300], [1, 0.5]);
 
   useEffect(() => {
     const getData = async () => {
       await fetch(`${import.meta.env.VITE_BASE_API_URL}/blogs?categories=botd`)
         .then((res) => res.json())
         .then((data) => setBotd(data.data))
-        .catch((err) => console.log(err));
     };
 
     getData();
@@ -36,7 +40,14 @@ export default function Home() {
   // useEffect(() => console.log(botd), [botd])
 
   return (
-    <div className="space-y-32">
+    <div className="space-y-3">
+
+      {/* login */}
+      {FormType =="login" ? <FloatingLogin /> : ""}
+
+      {/* login */}
+
+
       <Wrapper>
         <h1 className="text-4xl md:text-6xl xl:text-8xl font-semibold text-center uppercas">
           publica más, gana más
@@ -71,7 +82,7 @@ export default function Home() {
 
           <div
             ref={imageRef}
-            className="rounded-md md:mt-32 static md:sticky top-5 left-0 min-h-[800px] overflow-hidden"
+            className="rounded-md md:mt-32 static md:sticky top-5 left-0 min-h-[800px]"
           >
             <motion.img
               initial={{ y: "100%", opacity: 0 }}

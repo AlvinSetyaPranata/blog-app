@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { profileAtom } from "../store";
+import { formVisible, profileAtom } from "../store";
 import { useAtom } from "jotai";
 import { easeIn, motion } from "framer-motion";
 
@@ -7,6 +7,7 @@ export default function Navbar() {
   const [credential] = useAtom(profileAtom);
   const [profilePhoto, setProfilePhoto] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
+  const [, setFormVisible] = useAtom(formVisible)
 
   // useEffect(() => console.log(profilePhoto), [profilePhoto])
 
@@ -38,15 +39,15 @@ export default function Navbar() {
 
   const popUpVariants = {
     "initial" : {
-      opacity: 0
+      opacity: 0,
+      display: "none"
     },
 
     "animate" : {
-      opacity: 100
+      opacity: 100,
+      display: "block"
     }
   }
-
-  // useEffect(() => console.log(credential), [credential]);
 
   return (
     <div className="max-w-[1300px] mx-auto py-6 flex justify-between items-center px-4">
@@ -89,6 +90,7 @@ export default function Navbar() {
 
       <div className="relative items-center text-sm font-normal hidden md:flex gap-x-4">
 
+          <div  className="flex gap-x-4 mr-4 font-medium">
         {/* popup */}
         <motion.div
         initial="initial"
@@ -106,8 +108,7 @@ export default function Navbar() {
           </div>
         </motion.div>
           {/* popup */}
-          <div >
-        {credential ? (
+        {false ? (
           <>
             <a
               onMouseEnter={() => setShowPopup(true)}
@@ -135,15 +136,17 @@ export default function Navbar() {
           </>
         ) : (
           <>
-            <a
-              href="/login"
-              className="border-b-2 border-transparent hover:border-black hover:cursor-pointer"
+            <button
+              onClick={() => setFormVisible("login")}
+              className="border-b-2 border-transparent hover:border-black hover:cursor-pointer mr-4"
             >
               Login
-            </a>
-            <h3 className="border-b-2 border-transparent hover:border-black hover:cursor-pointer">
+            </button>
+            <button
+            onClick={() => setFormVisible("register")}
+            className="border-b-2 border-transparent hover:border-black hover:cursor-pointer">
               Signup
-            </h3>
+            </button>
           </>
         )}
         </div>
