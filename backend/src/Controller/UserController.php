@@ -58,7 +58,7 @@ final class UserController extends AbstractController
             return new JsonResponse(['messege' => "User with given id, is not found"], JsonResponse::HTTP_NOT_FOUND);
         }
 
-        return new JsonResponse(JsonResponse::HTTP_NO_CONTENT);
+        return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
 
     }
 
@@ -74,7 +74,7 @@ final class UserController extends AbstractController
         $em->remove($user);
         $em->flush();
 
-        return new JsonResponse([JsonResponse::HTTP_NO_CONTENT]);
+        return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
     }
 
 
