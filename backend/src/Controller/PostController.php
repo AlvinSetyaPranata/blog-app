@@ -22,9 +22,9 @@ final class PostController extends AbstractController
         $query = $em->getRepository(Post::class)->findAll();
 
 
-        $serializedData = $serializer->normalize($query, 'json', ['groups' => 'post:read']);
+        $data = $serializer->serialize($query, 'json', ['groups' => 'post:read']);
 
-        return new JsonResponse(['messege' => 'OK', 'data' => $serializedData], JsonResponse::HTTP_OK);
+        return new JsonResponse(['messege' => 'OK', 'data' => json_decode($data, true)], JsonResponse::HTTP_OK);
 
     }
 
