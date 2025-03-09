@@ -16,14 +16,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
+    #[ORM\Column(length: 180, unique: true)]
+    private ?string $name = null;
+
+
+    #[ORM\Column()]
+    private ?int $age = null;
+
+    #[ORM\Column(length: 1, unique: true)]
+    private ?string $gender = null;
+
     /**
-     * @var list<string> The user roles
+     * The user's role.
      */
-    #[ORM\Column]
-    private array $roles = [];
+    #[ORM\ManyToOne(targetEntity: Role::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Role $role = null;
 
     /**
      * @var string The hashed password
@@ -65,19 +76,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getRoles(): array
     {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
+        return [$this->role->getName()];
     }
 
-    /**
-     * @param list<string> $roles
-     */
-    public function setRoles(array $roles): static
+    public function getRole(): ?Role
     {
-        $this->roles = $roles;
+        return $this->role;
+    }
+
+    public function setRole(Role $role): static
+    {
+        $this->role = $role;
 
         return $this;
     }
@@ -93,6 +102,44 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPassword(string $password): static
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    public function hasPermission(string $permissionName): bool
+    {
+        return $this->role ? $this->role->hasPermission($permissionName) : false;
+    }
+
+    public function getName(): string {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {   
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getAge(): int {
+        return $this->age;
+    }
+
+    public function setAge(int $age): static
+    {   
+        $this->age = $age;
+
+        return $this;
+    }
+
+    public function getGender(): int {
+        return $this->gender;
+    }
+
+    public function setGender(string $gender): static
+    {   
+        $this->gender = $gender;
 
         return $this;
     }

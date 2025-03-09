@@ -28,11 +28,12 @@ final class UserController extends AbstractController
     {
         $data = $request->request->all();
 
-        if (!$data || !isset($data["name"], $data["age"], $data["gender"])) {
+        if (!$data || !isset($data["name"], $data["age"], $data["gender"], $data["email"])) {
             return new JsonResponse(['message' => 'Invalid Request'], JsonResponse::HTTP_BAD_REQUEST);
         }
 
         $user = new User();
+        $user->setEmail($data["email"]);
         $user->setName($data["name"]);
         $user->setAge($data["age"]);
         $user->setGender($data["gender"]);
