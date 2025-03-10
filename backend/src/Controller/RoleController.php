@@ -71,7 +71,7 @@ final class RoleController extends AbstractController
         return new JsonResponse(JsonResponse::HTTP_NO_CONTENT);
     }
 
-    #[Route('/api/role{id}', name: 'delete_role', methods: ["DELETE"])]
+    #[Route('/api/role/{id}', name: 'delete_role', methods: ["DELETE"])]
     public function delete(int $id, EntityManagerInterface $em): JsonResponse
     {
         $role = $em->getRepository(Role::class)->find($id);
