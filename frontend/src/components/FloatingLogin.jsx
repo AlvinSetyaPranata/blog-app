@@ -5,11 +5,11 @@ import { profileAtom } from "../store";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-export default function FloatingLogin() {
-  const [isVisible, setIsVisible] = useState(false);
+export default function FloatingLogin({ isVisible, setter }) {
   const [, setCredential] = useAtom(profileAtom);
 
   const navigate = useNavigate();
+
 
   const googleAuth = useGoogleLogin({
     onSuccess: (response) => {
@@ -61,29 +61,38 @@ export default function FloatingLogin() {
     }
   };
 
+  
   useEffect(() => {
-    document.body.style.overflow = "hidden";
-  }, []);
+    if (isVisible) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "visible";
+    }
+  }, [isVisible])
+
+
 
   return (
-    <div className="fixed bottom-0 left-0 w-full min-h-screen flex bg-white z-10">
+    <div className={`${ isVisible ? "fixed" : "hidden"} bottom-0 left-0 w-full min-h-screen flex bg-white z-10`}>
       <div className="w-full min-h-full flex-1 bg-red-500 relative">
         {/* overlay */}
         <div className="absolute top-0 left-0 w-full h-full z-99 bg-black flex flex-col justify-end text-white bg-opacity-80 pb-12 gap-y-4">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="size-6 absolute top-8 left-8 z-999 text-white"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M6 18 18 6M6 6l12 12"
-            />
-          </svg>
+          <button onClick={() => setter(false)}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="size-6 absolute top-8 left-8 z-999 text-white"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18 18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
 
           <div className="pb-8 px-6 space-y-3">
             <h1 className="text-3xl md:text-4xl xl:text-5xl font-bold">
@@ -129,7 +138,7 @@ export default function FloatingLogin() {
               <button
                 type="button"
                 className="hover:cursor-pointer"
-                onClick={() => setIsVisible((state) => !state)}
+                onClick={() => setter((state) => !state)}
               >
                 {toogleEye()}
               </button>
