@@ -2,40 +2,17 @@ import React, { useEffect, useState } from "react";
 import { formVisible, profileAtom } from "../store";
 import { useAtom } from "jotai";
 import { easeIn, motion } from "framer-motion";
+import FloatingLogin from "./FloatingLogin";
+import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
   const [credential] = useAtom(profileAtom);
   const [profilePhoto, setProfilePhoto] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
-  const [, setFormVisible] = useAtom(formVisible)
+  const [showForm, setShowForm] = useState(false)
+  const [FormType, setFormVisible] = useAtom(formVisible)
 
-  // useEffect(() => console.log(profilePhoto), [profilePhoto])
-
-  useEffect(() => {
-    const getProfile = async () => {
-      await fetch(
-        "https://people.googleapis.com/v1/people/me?personFields=photos",
-        {
-          headers: {
-            Authorization: credential.access_token,
-          },
-        }
-      ).then((res) => {
-        const data = res.data;
-
-        if (res.status == 200) {
-          setProfilePhoto(data.photos[0].url);
-        } else {
-          setProfilePhoto("https://api.dicebear.com/7.x/bottts/svg");
-        }
-      });
-    };
-
-    if (credential) {
-      getProfile();
-    }
-  }, [credential]);
-
+  const navigation = useNavigate()
 
   const popUpVariants = {
     "initial" : {
@@ -49,8 +26,16 @@ export default function Navbar() {
     }
   }
 
+  const tooglePopup = (name) => {
+    setFormVisible(name)
+    setShowForm(true)
+  }
+
   return (
     <div className="max-w-[1300px] mx-auto py-6 flex justify-between items-center px-4">
+
+      <FloatingLogin defaultVisible={showForm} setter={setShowForm} />
+
       <div className="flex items-center gap-x-6">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -137,13 +122,13 @@ export default function Navbar() {
         ) : (
           <>
             <button
-              onClick={() => setFormVisible("login")}
+              onClick={() => navigation("/login")}
               className="border-b-2 border-transparent hover:border-black hover:cursor-pointer mr-4"
             >
               Login
             </button>
             <button
-            onClick={() => setFormVisible("register")}
+            onClick={() => navigation("/register")}
             className="border-b-2 border-transparent hover:border-black hover:cursor-pointer">
               Signup
             </button>
