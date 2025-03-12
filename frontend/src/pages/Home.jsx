@@ -15,8 +15,6 @@ export default function Home() {
   const { scrollY } = useScroll();
   const imageRef = useRef(null);
 
-  const [FormType,] = useAtom(formVisible)
-
 
   const isInView = useInView(imageRef, {
     margin: "-40% 0px -40% 0px",
@@ -41,13 +39,6 @@ export default function Home() {
 
   return (
     <div className="space-y-3">
-
-      {/* login */}
-      {FormType =="login" ? <FloatingLogin /> : ""}
-
-      {/* login */}
-
-
       <Wrapper>
         <h1 className="text-4xl md:text-6xl xl:text-8xl font-semibold text-center uppercas">
           publica más, gana más

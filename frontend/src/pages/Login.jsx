@@ -3,19 +3,18 @@ import { useAtom } from "jotai";
 import React, { useEffect, useState } from "react";
 import { profileAtom } from "../store";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 
 export default function Login() {
   const [isVisible, setIsVisible] = useState(false);
   const [, setCredential] = useAtom(profileAtom);
-  
 
   const navigate = useNavigate();
 
+
   const googleAuth = useGoogleLogin({
     onSuccess: (response) => {
-      setCredential(response)
-      navigate("/")
+      setCredential(response);
+      navigate("/");
     },
   });
 
@@ -64,23 +63,25 @@ export default function Login() {
 
   return (
     <div className="w-full min-h-screen flex">
-      <div className="w-full min-h-full flex-1 bg-red-500 relative">
+      <div className="min-h-full flex-1 relative">
         {/* overlay */}
         <div className="absolute top-0 left-0 w-full h-full z-99 bg-black flex flex-col justify-end text-white bg-opacity-80 pb-12 gap-y-4">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="size-6 absolute top-8 left-8 z-999 text-white"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
-            />
-          </svg>
+          <button onClick={() => navigate(-1)}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="size-6 absolute top-8 left-8 z-999 text-white"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
+              />
+            </svg>
+          </button>
           <div className="pb-8 px-6 space-y-3">
             <h1 className="text-3xl md:text-4xl xl:text-5xl font-bold">
               Ready to change the world?
@@ -98,12 +99,12 @@ export default function Login() {
           </div>
         </div>
         <img
-          className="w-full h-full aspect-[3/2]"
+          className="w-full h-full aspect-[3/2] object-cover"
           src="/image2.jpg"
           alt="backgroud"
         />
       </div>
-      <div className="w-full min-h-full flex-1 flex flex-col justify-center items-center">
+      <div className="w-max min-h-full flex-1 flex flex-col justify-center items-center">
         <form className="space-y-12">
           <h2 className="font-semibold md:text-lg xl:text-3xl text-center">
             Greetings Writer
