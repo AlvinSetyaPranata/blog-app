@@ -104,7 +104,7 @@ export default function Register() {
         />
       </div>
       <div className="w-full min-h-full flex-1 flex flex-col justify-center items-center">
-        <form className="space-y-12">
+        <form className="space-y-12 py-12">
           <h2 className="font-semibold md:text-lg xl:text-3xl text-center col-span-2">
             Greetings Writer
           </h2>
