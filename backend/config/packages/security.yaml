@@ -16,6 +16,7 @@ security:
         main:
             lazy: true
             provider: app_user_provider
+            custom_authenticator: App\Security\AuthAuthenticator
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -36,6 +37,22 @@ security:
 
 when@test:
     security:
+        enable_authenticator_manager: true
+
+        firewalls:
+            dev:
+                pattern: ^/(_(profiler|wdt)|css|images|js)/
+                security: false
+
+            api:
+                pattern: ^/api
+                stateless: true
+                jwt: ~
+
+        access_control:
+            - { path: ^/api/login, roles: PUBLIC_ACCESS }
+            - { path: ^/api, roles: ROLE_USER }
+            
         password_hashers:
             # By default, password hashers are resource intensive and take time. This is
             # important to generate secure password hashes. In tests however, secure hashes
