@@ -15,7 +15,7 @@ class Permission
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['role:read', 'permission:read'])]
+    #[Groups(['role:read', 'permission:read', 'user:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 100, unique: true)]
