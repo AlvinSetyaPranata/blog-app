@@ -100,8 +100,8 @@ export default function Home() {
         <div className="mt-12">
           <CardOverlay
             src="/woman-eyes.jpg"
-            title={botd ? botd.title : ""}
-            desc={botd.author ? botd.author.name : ""}
+            title={""}
+            desc={""}
           />
         </div>
       </Wrapper>
