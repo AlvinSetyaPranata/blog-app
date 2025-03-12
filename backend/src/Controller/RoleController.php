@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Permission;
 use App\Entity\Role;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -41,8 +42,18 @@ final class RoleController extends AbstractController
 
         $role = new Role();
         $role->setName($requestData["name"]);
+        $permissions = $em->getRepository(Permission::class);
 
         // set Permissions
+        if (isset($reqData["permissions"])) {
+            foreach ($reqData["permissions"] as $userPermission) {
+                $permission = $permissions->findByName($userPermission);
+
+                if ($permission) {
+                    $role->addPermission($permission);
+                }
+            }
+        }
 
 
         $em->persist($role);
