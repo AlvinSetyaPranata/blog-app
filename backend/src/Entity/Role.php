@@ -16,11 +16,11 @@ class Role
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['role:read'])]
+    #[Groups(['role:read', 'user:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(['role:read'])]
+    #[Groups(['role:read', 'user:read'])]
     private ?string $name = null;
 
     /**
@@ -31,7 +31,7 @@ class Role
     private Collection $permissions;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(['role:read'])]
+    #[Groups(['role:read', 'user:read'])]
     private ?\DateTimeInterface $date_created = null;
 
     public function __construct()
