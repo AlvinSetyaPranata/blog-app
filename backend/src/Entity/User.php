@@ -33,9 +33,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:read'])]
     private ?int $age = null;
 
-    #[ORM\Column(length: 1, unique: true)]
+    #[ORM\Column(length: 1)]
     #[Groups(['user:read'])]
     private ?string $gender = null;
+
+    #[ORM\Column(length: 180, nullable: true)]
+    #[Groups(['user:read'])]
+    private ?string $avatar = null;
 
     /**
      * The user's role.
@@ -160,6 +164,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getAvatar(): string
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(string $avatar): static
+    {
+        $this->avatar = $avatar;
+
+        return $this;
+    }
+
     /**
      * @see UserInterface
      */
@@ -182,4 +198,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             $this->date_registered = new \DateTime();
         }
     }
+
+
 }
