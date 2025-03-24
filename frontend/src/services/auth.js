@@ -17,6 +17,6 @@ export async function NormalLogin(event) {
 
     if (!res.ok) return [false, null]
 
-    return [true, await res.json]
+    return [true, await res.json()]
 
 }
