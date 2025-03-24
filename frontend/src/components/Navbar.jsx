@@ -1,16 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { formVisible, profileAtom } from "../store";
-import { useAtom } from "jotai";
 import { easeIn, motion } from "framer-motion";
 import FloatingLogin from "./FloatingLogin";
 import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
-  const [credential] = useAtom(profileAtom);
-  const [profilePhoto, setProfilePhoto] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
   const [showForm, setShowForm] = useState(false)
-  const [FormType, setFormVisible] = useAtom(formVisible)
 
   const navigation = useNavigate()
 

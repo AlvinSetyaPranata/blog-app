@@ -1,12 +1,8 @@
 import { useGoogleLogin } from "@react-oauth/google";
-import { useAtom } from "jotai";
 import React, { useEffect, useState } from "react";
-import { profileAtom } from "../store";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 
 export default function FloatingLogin({ isVisible, setter }) {
-  const [, setCredential] = useAtom(profileAtom);
 
   const navigate = useNavigate();
 

@@ -7,9 +7,6 @@ import {
   useTransform,
 } from "framer-motion";
 import CardOverlay from "../components/CardOverlay";
-import { useAtom } from "jotai";
-import FloatingLogin from "../components/FloatingLogin";
-import { formVisible } from "../store";
 
 export default function Home() {
   const { scrollY } = useScroll();

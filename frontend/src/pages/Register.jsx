@@ -1,21 +1,19 @@
 import { useGoogleLogin } from "@react-oauth/google";
-import { useAtom } from "jotai";
 import React, { useState } from "react";
-import { profileAtom } from "../store";
 import { useNavigate } from "react-router-dom";
 
 export default function Register() {
   const [isVisible, setIsVisible] = useState(false);
-  const [, setCredential] = useAtom(profileAtom);
+
 
   const navigate = useNavigate();
 
-  const googleAuth = useGoogleLogin({
-    onSuccess: (response) => {
-      setCredential(response);
-      navigate("/");
-    },
-  });
+  // const googleAuth = useGoogleLogin({
+  //   onSuccess: (response) => {
+  //     setCredential(response);
+  //     navigate("/");
+  //   },
+  // });
 
   const toogleEye = () => {
     if (!isVisible) {

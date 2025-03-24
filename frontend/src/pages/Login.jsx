@@ -1,22 +1,35 @@
 import { useGoogleLogin } from "@react-oauth/google";
-import { useAtom } from "jotai";
 import React, { useEffect, useState } from "react";
-import { profileAtom } from "../store";
 import { useNavigate } from "react-router-dom";
+import { NormalLogin } from "../services/auth";
+import useAuthStore from "../store/auth";
+import { toast } from "react-toastify"
 
 export default function Login() {
   const [isVisible, setIsVisible] = useState(false);
-  const [, setCredential] = useAtom(profileAtom);
+  const [isPending, setIsPending] = useState(false);
 
+  const { setToken } = useAuthStore()
   const navigate = useNavigate();
 
 
-  const googleAuth = useGoogleLogin({
-    onSuccess: (response) => {
-      setCredential(response);
-      navigate("/");
-    },
-  });
+  const handleNormalLogin = async (event) => {
+    setIsPending(true)
+
+    const [status, data] = await NormalLogin(event)
+
+    if (!status) {
+      toast.error("Failed to logged in!", { position: 'top-right' })
+      return
+    }
+    
+    toast.success("Successfully loged in!", { position: 'top-right' })
+    setToken(data.token)
+    setIsPending(false)
+    navigate("/")
+
+    
+  }
 
   const toogleEye = () => {
     if (!isVisible) {
@@ -83,7 +96,7 @@ export default function Login() {
             </svg>
           </button>
           <div className="pb-8 px-6 space-y-3">
-            <h1 className="text-3xl md:text-4xl xl:text-5xl font-bold">
+            <h1 className="text-3xl md:text-4xl xl:text-5xl font-bold overflow-hidden">
               Ready to change the world?
             </h1>
             <p className="text-slate-300">
@@ -92,11 +105,11 @@ export default function Login() {
             </p>
           </div>
 
-          <div className="flex min-w-full gap-x-4 justify-center">
+          {/* <div className="flex min-w-full gap-x-4 justify-center">
             <div className="min-w-[25px] bg-white min-h-[4px] rounded-md"></div>
             <div className="min-w-[25px] bg-gray-400 min-h-[4px] rounded-md"></div>
             <div className="min-w-[25px] bg-gray-400 min-h-[4px] rounded-md"></div>
-          </div>
+          </div> */}
         </div>
         <img
           className="w-full h-full aspect-[3/2] object-cover"
@@ -105,14 +118,15 @@ export default function Login() {
         />
       </div>
       <div className="w-max min-h-full flex-1 flex flex-col justify-center items-center">
-        <form className="space-y-12">
-          <h2 className="font-semibold md:text-lg xl:text-3xl text-center">
+        <form className="space-y-12" onSubmit={handleNormalLogin}>
+          <h2 className="font-semibold md:text-lg xl:text-3xl text-center overflow-hidden">
             Greetings Writer
           </h2>
           <div className="space-y-2">
             <p className="text-sm font-medium">Email</p>
             <input
               type="email"
+              name="email"
               className="border border-black rounded-md px-2 py-2.5 text-sm outline-none min-w-[350px]"
             />
           </div>
@@ -121,6 +135,7 @@ export default function Login() {
             <div className="gap-x-4 border border-black rounded-md p-2 text-sm min-w-[300px] flex">
               <input
                 type={isVisible ? "text" : "password"}
+                name="password"
                 className="flex-1 outline-none"
               />
               <button
@@ -135,11 +150,12 @@ export default function Login() {
           <button
             type="submit"
             className="min-w-[350px] text-center bg-black text-white rounded-md py-3 font-medium text-sm"
+            disabled={isPending}
           >
-            Login
+            { isPending ? 'Logging in' : 'Login'}
           </button>
         </form>
-        <div className="border-t-[1.5px] border-gray-400 mt-8 pt-8 flex flex-col gap-y-4">
+        {/* <div className="border-t-[1.5px] border-gray-400 mt-8 pt-8 flex flex-col gap-y-4">
           <button
             className="min-w-[350px] text-center border-2 border-black rounded-md py-3 font-semibold text-sm flex items-center justify-center gap-x-3"
             onClick={googleAuth}
@@ -176,7 +192,7 @@ export default function Login() {
               <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z" />
             </svg>
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );
