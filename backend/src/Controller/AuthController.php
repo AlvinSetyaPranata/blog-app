@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Role;
 use App\Entity\User;
+use App\Service\FileUploader;
 use DateTime;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityManagerInterface;
@@ -54,7 +55,7 @@ final class AuthController extends AbstractController
     }
 
     #[Route('/api/auth/register', name: 'register', methods: ['POST'])]
-    public function create(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher): JsonResponse
+    public function create(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher, FileUploader $fileUploader): JsonResponse
     {
         $data = $request->request->all();
 
@@ -74,7 +75,14 @@ final class AuthController extends AbstractController
             return new JsonResponse(['message' => 'User already registered'], JsonResponse::HTTP_CONFLICT);
         }
 
+
         $user = new User();
+
+        if ($request->files->get('avatar')) {
+            $fileName = $fileUploader->upload($request->files->get('avatar'));
+            $user->setAvatar($request->getSchemeAndHttpHost().'/uploads/'.$fileName);
+        }
+
         $user->setEmail($data["email"]);
         $user->setName($data["name"]);
         $user->setAge($data["age"]);
@@ -89,12 +97,12 @@ final class AuthController extends AbstractController
         $em->flush();
 
         return new JsonResponse(['message' => 'User Created Successfully', 'user' => [
-            'id' => $user->getId(),
             'name' => $user->getName(),
             'email' => $user->getEmail(),
             'age' => $user->getAge(),
             'gender' => $user->getGender(),
             'role' => $user->getRole()->getName(),
+            'avatar' => $user->getAvatar()
         ]], JsonResponse::HTTP_CREATED);
     }
 }
