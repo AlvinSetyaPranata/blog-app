@@ -45,7 +45,7 @@ final class AuthController extends AbstractController
                     ->withSameSite('Strict')
                     ->withExpires(new \DateTime('+7 Days'));
 
-        $res = new JsonResponse(['messege' => 'Successfully logged in!', 'access_token' => $accessToken]);
+        $res = new JsonResponse(['messege' => 'Successfully logged in!', 'token' => $accessToken]);
         $res->headers->setCookie($cookie);
 
         return $res;
