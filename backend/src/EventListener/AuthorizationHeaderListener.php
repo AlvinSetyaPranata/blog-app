@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 class AuthorizationHeaderListener
 {
 
-   private array $exculudedRoutes = ["/api/auth/login"];
+   private array $exculudedRoutes = ["/api/auth/login", "/api/auth/register"];
 
     public function onKernelRequest(RequestEvent $event)
     {

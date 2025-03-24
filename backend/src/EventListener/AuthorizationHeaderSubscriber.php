@@ -14,7 +14,7 @@ class AuthorizationHeaderSubscriber implements EventSubscriberInterface
     // private array $excludedRoutes = [
     //     'login',      
     // ];
-    private array $exculudedRoutes = ["/api/auth/login"];
+    private array $exculudedRoutes = ["/api/auth/login", "/api/auth/register"];
 
     public function onKernelRequest(RequestEvent $event)
     {

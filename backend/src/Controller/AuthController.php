@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Role;
 use App\Entity\User;
 use DateTime;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -50,5 +51,50 @@ final class AuthController extends AbstractController
 
         return $res;
 
+    }
+
+    #[Route('/api/auth/register', name: 'register', methods: ['POST'])]
+    public function create(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher): JsonResponse
+    {
+        $data = $request->request->all();
+
+        if (!$data || !isset($data["name"], $data["age"], $data["gender"], $data["email"], $data["password"], $data["role_id"])) {
+            return new JsonResponse(['message' => 'Invalid Request'], JsonResponse::HTTP_BAD_REQUEST);
+        }
+
+        $role = $em->getRepository(Role::class)->find($data["role_id"]);
+
+        if (!$role) {
+            return new JsonResponse(['messege' => 'Role with given name is not found!'], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        $userExists = $em->getRepository(User::class)->findOneBy(['email' => $data["email"]]);
+
+        if ($userExists) {
+            return new JsonResponse(['message' => 'User already registered'], JsonResponse::HTTP_CONFLICT);
+        }
+
+        $user = new User();
+        $user->setEmail($data["email"]);
+        $user->setName($data["name"]);
+        $user->setAge($data["age"]);
+        $user->setGender($data["gender"]);
+        $user->setRole($role);
+
+        $password = $passwordHasher->hashPassword($user, $data["password"]);
+
+        $user->setPassword($password);
+
+        $em->persist($user);
+        $em->flush();
+
+        return new JsonResponse(['message' => 'User Created Successfully', 'user' => [
+            'id' => $user->getId(),
+            'name' => $user->getName(),
+            'email' => $user->getEmail(),
+            'age' => $user->getAge(),
+            'gender' => $user->getGender(),
+            'role' => $user->getRole()->getName(),
+        ]], JsonResponse::HTTP_CREATED);
     }
 }
