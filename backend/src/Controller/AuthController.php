@@ -14,9 +14,18 @@ use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 final class AuthController extends AbstractController
 {
+
+    private SerializerInterface $serializer;
+
+    public function __construct(SerializerInterface $serializer)
+    {
+        $this->serializer = $serializer;
+    }
+
     #[Route('/api/auth/login', name: 'login', methods: ['POST'])]
     public function login(Request $req, UserPasswordHasherInterface $hasher, EntityManagerInterface $em, JWTTokenManagerInterface $tm): JsonResponse
     {
@@ -32,7 +41,7 @@ final class AuthController extends AbstractController
             return new JsonResponse(['messege' => 'Invalid Username or Password'], JsonResponse::HTTP_UNAUTHORIZED);
         }
 
-        if (!$hasher->isPasswordValid($user, $reqData["password"])){
+        if (!$hasher->isPasswordValid($user, $reqData["password"])) {
             return new JsonResponse(['messege' => 'Invalid Username or Password'], JsonResponse::HTTP_UNAUTHORIZED);
         }
 
@@ -40,18 +49,21 @@ final class AuthController extends AbstractController
         $refreshToken = bin2hex(random_bytes(64));
 
         $cookie = Cookie::create("refresh_token")
-                    ->withValue($refreshToken)
-                    ->withHttpOnly(true)
-                    ->withSecure(true)
-                    ->withPath('/api/auth/refresh')
-                    ->withSameSite('Strict')
-                    ->withExpires(new \DateTime('+7 Days'));
+            ->withValue($refreshToken)
+            ->withHttpOnly(true)
+            ->withSecure(true)
+            ->withPath('/api/auth/refresh')
+            ->withSameSite('Strict')
+            ->withExpires(new \DateTime('+7 Days'));
 
-        $res = new JsonResponse(['messege' => 'Successfully logged in!', 'token' => $accessToken]);
+
+        $user_information = $this->serializer->serialize($user, "json", ['groups' => 'user:read']);
+
+
+        $res = new JsonResponse(['messege' => 'Successfully logged in!', 'user' => json_decode($user_information, true), 'token' => $accessToken]);
         $res->headers->setCookie($cookie);
 
         return $res;
-
     }
 
     #[Route('/api/auth/register', name: 'register', methods: ['POST'])]
@@ -80,7 +92,7 @@ final class AuthController extends AbstractController
 
         if ($request->files->get('avatar')) {
             $fileName = $fileUploader->upload($request->files->get('avatar'));
-            $user->setAvatar($request->getSchemeAndHttpHost().'/uploads/'.$fileName);
+            $user->setAvatar($request->getSchemeAndHttpHost() . '/uploads/' . $fileName);
         }
 
         $user->setEmail($data["email"]);
