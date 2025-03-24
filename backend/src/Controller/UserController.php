@@ -40,6 +40,12 @@ final class UserController extends AbstractController
             return new JsonResponse(['messege' => 'Role with given name is not found!'], JsonResponse::HTTP_NOT_FOUND);
         }
 
+        $userExists = $em->getRepository(User::class)->findOneBy(['email' => $data["email"]]);
+
+        if ($userExists) {
+            return new JsonResponse(['message' => 'User already registered'], JsonResponse::HTTP_CONFLICT);
+        }
+
         $user = new User();
         $user->setEmail($data["email"]);
         $user->setName($data["name"]);
