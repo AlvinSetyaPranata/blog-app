@@ -9,7 +9,7 @@ export default function Login() {
   const [isVisible, setIsVisible] = useState(false);
   const [isPending, setIsPending] = useState(false);
 
-  const { setToken } = useAuthStore()
+  const { setToken, setUser } = useAuthStore()
   const navigate = useNavigate();
 
 
@@ -25,6 +25,7 @@ export default function Login() {
     
     toast.success("Successfully loged in!", { position: 'top-right' })
     setToken(data.token)
+    setUser(data.user)
     setIsPending(false)
     navigate("/")
 
