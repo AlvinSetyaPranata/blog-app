@@ -31,6 +31,11 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
+    App\Service\FileUploader:
+        arguments:
+            $targetDir: '%kernel.project_dir%/public/uploads'
+
+
 
     # Add more service definitions when explicit configuration is needed
     # Please note that last definitions always *replace* previous ones
