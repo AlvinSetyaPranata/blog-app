@@ -34,7 +34,15 @@ export default function Home() {
           Tatapan si pekerja keras
         </h1>
 
-        <div className="relative h-[200px] md:h-[2500px] mt-8">
+        <div className="flex justify-center gap-x-4 items-center mt-14">
+          <img src="/woman-eyes.jpg" alt="botd-user-image" className="size-[40px] rounded-full"/>
+          <div>
+            <h2 className="font-medium">Nindia Prameswari Putri Cahyono</h2>
+            <p className="text-sm">Senior Tech Writer</p>
+          </div>
+        </div>
+
+        <div className="relative h-[200px] md:h-[2500px]">
           {/* start content */}
           <img
             src="image2.jpg"
@@ -107,13 +115,13 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-16 mt-16">
           <CardOverlay
             src="/woman-eyes.jpg"
-            title="Tatapan si pekerja keras"
-            desc="Nindia Prameswari Putri Cahyono"
+            title="blog"
+            desc="Tatapan si pekerja keras"
           />
           <CardOverlay
             src="/image2.jpg"
-            title="Nindia Prameswari Putri Cahyono"
-            desc="Journalist Expert"
+            title="blog"
+            desc="Tatapan si pekerja keras"
           />
         </div>
       </Wrapper>
@@ -155,11 +163,7 @@ export default function Home() {
             name="Nindia Prameswari Putri Cahyono"
             role="Journalist Expert"
           />
-          <CardOverlay
-            src="/image2.jpg"
-            name="Nindia Prameswari Putri Cahyono"
-            role="Journalist Expert"
-          />
+
         </div>
       </Wrapper>
     </div>
