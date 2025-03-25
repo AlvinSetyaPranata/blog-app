@@ -7,42 +7,34 @@ import {
   useTransform,
 } from "framer-motion";
 import CardOverlay from "../components/CardOverlay";
+import { GetBotd } from "../services/blog";
+import useAuthStore from "../store/auth";
 
 export default function Home() {
-  const { scrollY } = useScroll();
+  const { scrollYProgress } = useScroll();
+  
   const imageRef = useRef(null);
 
 
   const isInView = useInView(imageRef, {
     margin: "-40% 0px -40% 0px",
     once: true,
+    offset: ["start end", "end start"]
   });
 
-  const [botd, setBotd] = useState({});
-  const scale = useTransform(scrollY, [0, 300], [1, 0.5]);
+  const scale = useTransform(scrollYProgress, [0, 0.3, 0.5], [1, 0.5, 1]);
 
-  useEffect(() => {
-    const getData = async () => {
-      await fetch(`${import.meta.env.VITE_BASE_API_URL}/blogs?categories=botd`)
-        .then((res) => res.json())
-        .then((data) => setBotd(data.data))
-    };
-
-    getData();
-  }, []);
-
-
-  // useEffect(() => console.log(botd), [botd])
+  const { token } = useAuthStore()
 
   return (
     <div className="space-y-3">
       <Wrapper>
-        <h1 className="text-4xl md:text-6xl xl:text-8xl font-semibold text-center uppercas">
+        <h3 className="text-center text-base md:text-lg mt-6">
+          Blog of the Day
+        </h3>
+        <h1 className="text-4xl md:text-6xl xl:text-8xl font-semibold text-center uppercase overflow-visible mt-12">
           publica más, gana más
         </h1>
-        <h3 className="text-center text-base md:text-lg xl:text-xl mt-6">
-          Publish or Search anything in one place
-        </h3>
 
         <div className="relative h-[200px] md:h-[2000px] mt-8">
           {/* start content */}
@@ -70,7 +62,7 @@ export default function Home() {
 
           <div
             ref={imageRef}
-            className="rounded-md md:mt-32 static md:sticky top-5 left-0 min-h-[800px]"
+            className="rounded-md md:mt-32 sticky top-5 left-0 min-h-[300px]"
           >
             <motion.img
               initial={{ y: "100%", opacity: 0 }}
@@ -85,25 +77,6 @@ export default function Home() {
         </div>
       </Wrapper>
 
-      {/* Best Blog Section */}
-
-      <Wrapper>
-        <h1 className="text-2xl md:text-4xl xl:text-6xl font-semibold text-center uppercase">
-          Blog Of The Day
-        </h1>
-        <h3 className="text-center text-base md:text-lg xl:text-xl mt-4">
-          The most viewed blog nowdays
-        </h3>
-        <div className="mt-12">
-          <CardOverlay
-            src="/woman-eyes.jpg"
-            title={""}
-            desc={""}
-          />
-        </div>
-      </Wrapper>
-
-      {/* Explore More section */}
 
       <Wrapper>
         <div className="flex justify-between items-center">
