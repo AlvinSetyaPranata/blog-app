@@ -97,7 +97,7 @@ export default function Navbar() {
               onMouseEnter={() => setShowPopup(true)}
               onMouseLeave={() => setShowPopup(false)}
               href="#"
-              className={`rounded-full size-[40px] ${!user ? "bg-gray-600 animate-pulse" : ""} hover:cursor-pointer bg-red-500`}
+              className={`rounded-full overflow-hidden size-[40px] ${!user ? "bg-gray-600 animate-pulse" : ""} hover:cursor-pointer bg-red-500`}
             >
               <img src={user.avatar} alt="user-avatar" className="size-full aspect-video" />
             </a>
