@@ -97,7 +97,7 @@ export default function Login() {
             </svg>
           </button>
           <div className="pb-8 px-6 space-y-3">
-            <h1 className="text-3xl md:text-4xl xl:text-5xl font-bold overflow-hidden">
+            <h1 className="text-3xl md:text-4xl xl:text-5xl font-bold">
               Ready to change the world?
             </h1>
             <p className="text-slate-300">
@@ -120,7 +120,7 @@ export default function Login() {
       </div>
       <div className="w-max min-h-full flex-1 flex flex-col justify-center items-center">
         <form className="space-y-12" onSubmit={handleNormalLogin}>
-          <h2 className="font-semibold md:text-lg xl:text-3xl text-center overflow-hidden">
+          <h2 className="font-semibold md:text-lg xl:text-3xl text-center">
             Greetings Writer
           </h2>
           <div className="space-y-2">
