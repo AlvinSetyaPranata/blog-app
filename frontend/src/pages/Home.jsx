@@ -1,42 +1,40 @@
 import React, { useEffect, useRef, useState } from "react";
 import Wrapper from "../components/layouts/Wrapper";
-import {
-  motion,
-  useInView,
-  useScroll,
-  useTransform,
-} from "framer-motion";
+import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import CardOverlay from "../components/CardOverlay";
 import { GetBotd } from "../services/blog";
 import useAuthStore from "../store/auth";
 
 export default function Home() {
   const { scrollYProgress } = useScroll();
-  
-  const imageRef = useRef(null);
 
+  const imageRef = useRef(null);
 
   const isInView = useInView(imageRef, {
     margin: "-40% 0px -40% 0px",
     once: true,
-    offset: ["start end", "end start"]
+    offset: ["start end", "end start"],
   });
 
   const scale = useTransform(scrollYProgress, [0, 0.3, 0.5], [1, 0.5, 1]);
 
-  const { token } = useAuthStore()
+  const { token } = useAuthStore();
 
   return (
     <div className="space-y-3">
       <Wrapper>
-        <h3 className="text-center text-base md:text-lg mt-6">
-          Blog of the Day
-        </h3>
+        <div className="flex justify-center items-center mt-6 gap-x-4 text-sm">
+          <h3 className="">Blog of the Day</h3>
+          <div className="px-2 py-1 border border-black">
+            <p className="font-medium">24 February</p>
+          </div>
+          <h3>with rating of 100%</h3>
+        </div>
         <h1 className="text-4xl md:text-6xl xl:text-8xl font-semibold text-center uppercase overflow-visible mt-12">
-          publica más, gana más
+          Tatapan si pekerja keras
         </h1>
 
-        <div className="relative h-[200px] md:h-[2000px] mt-8">
+        <div className="relative h-[200px] md:h-[2500px] mt-8">
           {/* start content */}
           <img
             src="image2.jpg"
@@ -76,7 +74,6 @@ export default function Home() {
           </div>
         </div>
       </Wrapper>
-
 
       <Wrapper>
         <div className="flex justify-between items-center">
