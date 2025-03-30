@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
+import { motion } from "framer-motion";
 
-export default function CardWithOption({ imageURL, title, desc }) {
+export default function CardWithOption({ imageURL, title, desc, onRemove, id }) {
   const popUpRef = useRef(null);
 
   const handleEnableOption = () => {
@@ -21,7 +22,7 @@ export default function CardWithOption({ imageURL, title, desc }) {
   };
 
   return (
-    <div className="bg-white rounded-md w-full relative">
+    <motion.div className="bg-white rounded-md w-full relative">
       <img src={imageURL} alt="card-image" className="w-[400px] rounded-md" />
       <div className="flex justify-between items-center">
         <div className="mt-4">
@@ -54,11 +55,11 @@ export default function CardWithOption({ imageURL, title, desc }) {
           className="hidden absolute rounded-md shadow-md -bottom-8 right-0 w-[120px] text-sm z-20 overflow-hidden bg-white"
         >
           <button className="w-full py-2 px-4 text-left">Edit</button>
-          <button className="w-full py-2 px-4 text-left hover:bg-red-500 hover:text-white">
+          <button onClick={() => onRemove(id)} className="w-full py-2 px-4 text-left hover:bg-red-500 hover:text-white">
             Delete blog
           </button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
