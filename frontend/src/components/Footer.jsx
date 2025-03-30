@@ -12,10 +12,12 @@ export default function Footer() {
                 <a href="#">Blogs</a>
                 <a href="#">Academy</a>
             </div>
-            <div className='w-[300px] rounded-md bg-black text-white flex justify-center items-center gap-x-4  shrink-0'>
-                <h1>Happy</h1>
-                <img src="ramadhan-icon.svg" alt="ramadhan-icon" />
-                <h2 className='font-semibold'>Ramadhan mubarak</h2>
+            <div className='flex-1 flex justify-end'>
+                <div className='w-max rounded-md bg-black text-white flex justify-center items-center gap-x-4 py-6 px-8'>
+                    <h1>Happy</h1>
+                    <img src="/ramadhan-icon.svg" alt="ramadhan-icon" />
+                    <h2 className='font-semibold'>Ramadhan mubarak</h2>
+                </div>
             </div>
         </div>
 
