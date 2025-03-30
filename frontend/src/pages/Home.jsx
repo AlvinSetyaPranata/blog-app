@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Wrapper from "../components/layouts/Wrapper";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
-import CardOverlay from "../components/CardOverlay";
+import CardOverlay from "../components/Cards/CardOverlay";
 import { GetBotd } from "../services/blog";
 import useAuthStore from "../store/auth";
 
