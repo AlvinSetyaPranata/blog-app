@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import FloatingLogin from "./FloatingLogin";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useAuthStore from "../store/auth";
 
 export default function Navbar() {
@@ -83,21 +83,22 @@ export default function Navbar() {
         onMouseLeave={() => setShowPopup(false)}
         className="absolute top-[120%] left-0 z-9 bg-black text-white rounded-md flex flex-col">
           <div className="w-full min-w-[250px] border-b-[1px] border-gray-700 flex flex-col gap-y-4 py-6">
-            <a className="px-6 h-max py-1 bg-gray-800 bg-opacity-0 hover:bg-opacity-100 hover:duration-500 hover:ease-out hover:cursor-pointer duration-500 ease-in" href="#">Dashboard</a>
-            <a className="px-6 h-max py-1 bg-gray-800 bg-opacity-0 hover:bg-opacity-100 hover:duration-500 hover:ease-out hover:cursor-pointer duration-500 ease-in" href="#">Profile</a>
+            <Link className="px-6 h-max py-1 bg-gray-800 bg-opacity-0 hover:bg-opacity-100 hover:duration-500 hover:ease-out hover:cursor-pointer duration-500 ease-in" to="/account/dashboard">Dashboard</Link>
+            <Link className="px-6 h-max py-1 bg-gray-800 bg-opacity-0 hover:bg-opacity-100 hover:duration-500 hover:ease-out hover:cursor-pointer duration-500 ease-in" href="#">Profile</Link>
           </div>
           <div className="w-full min-w-[250px] border-b-[1px] border-gray-700 flex flex-col gap-y-4 py-6">
             <a href="#" className="px-6 h-max py-1 bg-red-800 bg-opacity-0 hover:bg-opacity-100 hover:duration-500 hover:ease-out hover:cursor-pointer duration-500 ease-in">Logout</a>
           </div>
         </motion.div>
           {/* popup */}
+        
         {token ? (
           <>
             <a
               onMouseEnter={() => setShowPopup(true)}
               onMouseLeave={() => setShowPopup(false)}
               href="#"
-              className={`rounded-full overflow-hidden size-[40px] ${!user ? "bg-gray-600 animate-pulse" : ""} hover:cursor-pointer bg-red-500`}
+              className={`rounded-full overflow-hidden size-[40px] ${!user ? "bg-gray-600 animate-pulse" : ""} hover:cursor-pointer bg-red-500 relative`}
             >
               <img src={user.avatar} alt="user-avatar" className="size-full aspect-video" />
             </a>
