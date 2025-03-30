@@ -16,18 +16,26 @@ export default function Login() {
   const handleNormalLogin = async (event) => {
     setIsPending(true)
 
-    const [status, data] = await NormalLogin(event)
 
-    if (!status) {
-      toast.error("Failed to logged in!", { position: 'top-right' })
-      return
+    try {
+      const [status, data] = await NormalLogin(event)
+  
+      if (!status) {
+        toast.error("Failed to logged in!", { position: 'top-right' })
+        return
+      }
+      
+      toast.success("Successfully loged in!", { position: 'top-right' })
+      setToken(data.token)
+      setUser(data.user)
+      setIsPending(false)
+      navigate("/")
+    } catch {
+      toast.error("Something went wrong when connecting to server")
+
+      setTimeout(() => setIsPending(false), 2000)
+      
     }
-    
-    toast.success("Successfully loged in!", { position: 'top-right' })
-    setToken(data.token)
-    setUser(data.user)
-    setIsPending(false)
-    navigate("/")
 
     
   }
@@ -150,7 +158,7 @@ export default function Login() {
           </div>
           <button
             type="submit"
-            className="min-w-[350px] text-center bg-black text-white rounded-md py-3 font-medium text-sm"
+            className="min-w-[350px] text-center bg-black text-white rounded-md py-3 font-medium text-sm disabled:bg-black/40 disabled:cursor-not-allowed"
             disabled={isPending}
           >
             { isPending ? 'Logging in' : 'Login'}
