@@ -16,6 +16,8 @@ export default function Routers() {
               <Route path='/' element={<Home />} />
               <Route path='/account' element={<AccountLayout/>}>
                 <Route path='/account/dashboard' element={<Blogs />} />
+                <Route path='/account/settings' element={<Blogs />} />
+                <Route path='/account/statistics' element={<Blogs />} />
               </Route>
             </Route>
 
