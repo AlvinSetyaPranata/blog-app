@@ -1,9 +1,16 @@
-import React from "react";
-import { Outlet, useLocation } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import ButtonWithIcon from "../buttons/ButtonWithIcon";
 
 export default function AccountLayout() {
   const location = useLocation();
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (location.pathname.includes("/account")) {
+      navigate("/account/dashboard")
+    }
+  }, [])
 
   return (
     <div className="flex py-8 px-12 flex-col items-center">
