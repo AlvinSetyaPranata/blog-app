@@ -1,18 +1,9 @@
-import { useGoogleLogin } from "@react-oauth/google";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function FloatingLogin({ isVisible, setter }) {
 
   const navigate = useNavigate();
-
-
-  const googleAuth = useGoogleLogin({
-    onSuccess: (response) => {
-      setCredential(response);
-      navigate("/");
-    },
-  });
 
   const toogleEye = () => {
     if (!isVisible) {
@@ -150,7 +141,6 @@ export default function FloatingLogin({ isVisible, setter }) {
         <div className="border-t-[1.5px] border-gray-400 mt-8 pt-8 flex flex-col gap-y-4">
           <button
             className="min-w-[350px] text-center border-2 border-black rounded-md py-3 font-semibold text-sm flex items-center justify-center gap-x-3"
-            onClick={googleAuth}
           >
             Login with Google
             <svg

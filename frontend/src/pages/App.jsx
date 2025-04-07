@@ -1,14 +1,13 @@
-import Routers from "../routes"
-import { ToastContainer } from "react-toastify"
+import { ToastContainer } from "react-toastify";
+import Routers from "../routes";
 
-function App() {
+
+export default function App() {
 
   return (
     <>
       <ToastContainer />
       <Routers />
     </>
-  )
+  );
 }
-
-export default App
