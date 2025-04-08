@@ -1,44 +1,57 @@
-import { useGoogleLogin } from "@react-oauth/google";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { NormalLogin } from "../services/auth";
+import { NormalLogin, supabase } from "../services/auth";
 import useAuthStore from "../store/auth";
-import { toast } from "react-toastify"
+import { toast } from "react-toastify";
+import { AuthContext } from "../context/AuthContext";
 
 export default function Login() {
   const [isVisible, setIsVisible] = useState(false);
   const [isPending, setIsPending] = useState(false);
 
-  const { setToken, setUser } = useAuthStore()
+  const { setToken, setUser } = useAuthStore();
   const navigate = useNavigate();
 
-
   const handleNormalLogin = async (event) => {
-    setIsPending(true)
-
+    setIsPending(true);
 
     try {
-      const [status, data] = await NormalLogin(event)
-  
-      if (!status) {
-        toast.error("Failed to logged in!", { position: 'top-right' })
-        return
-      }
-      
-      toast.success("Successfully loged in!", { position: 'top-right' })
-      setToken(data.token)
-      setUser(data.user)
-      setIsPending(false)
-      navigate("/")
-    } catch {
-      toast.error("Something went wrong when connecting to server")
+      const [status, data] = await NormalLogin(event);
 
-      setTimeout(() => setIsPending(false), 2000)
-      
+      if (!status) {
+        toast.error("Failed to logged in!", { position: "top-right" });
+        return;
+      }
+
+      toast.success("Successfully loged in!", { position: "top-right" });
+      setToken(data.token);
+      setUser(data.user);
+      setIsPending(false);
+      navigate("/");
+    } catch {
+      toast.error("Something went wrong when connecting to server");
+
+      setTimeout(() => setIsPending(false), 2000);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: "http://localhost:5173/account/dashboard/"
+      }
+    });
+
+    if (error) {
+      toast.error("Failed to login", "top right");
+      return;
     }
 
-    
-  }
+    toast.success("Successfully logged in with google", "top right");
+    // navigate("/account/dashboard")
+  };
 
   const toogleEye = () => {
     if (!isVisible) {
@@ -161,13 +174,13 @@ export default function Login() {
             className="min-w-[350px] text-center bg-black text-white rounded-md py-3 font-medium text-sm disabled:bg-black/40 disabled:cursor-not-allowed"
             disabled={isPending}
           >
-            { isPending ? 'Logging in' : 'Login'}
+            {isPending ? "Logging in" : "Login"}
           </button>
         </form>
-        {/* <div className="border-t-[1.5px] border-gray-400 mt-8 pt-8 flex flex-col gap-y-4">
+        <div className="border-t-[1.5px] border-gray-400 mt-8 pt-8 flex flex-col gap-y-4">
           <button
             className="min-w-[350px] text-center border-2 border-black rounded-md py-3 font-semibold text-sm flex items-center justify-center gap-x-3"
-            onClick={googleAuth}
+            onClick={handleGoogleLogin}
           >
             Login with Google
             <svg
@@ -191,7 +204,7 @@ export default function Login() {
               />
             </svg>
           </button>
-          <button className="min-w-[350px] text-center border-2 border-black bg-black text-white rounded-md py-3 text-sm font-semibold flex justify-center items-center gap-x-3">
+          {/* <button className="min-w-[350px] text-center border-2 border-black bg-black text-white rounded-md py-3 text-sm font-semibold flex justify-center items-center gap-x-3">
             Login with Apple
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -200,8 +213,8 @@ export default function Login() {
             >
               <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z" />
             </svg>
-          </button>
-        </div> */}
+          </button> */}
+        </div>
       </div>
     </div>
   );

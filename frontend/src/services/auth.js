@@ -1,3 +1,6 @@
+import { createClient } from "@supabase/supabase-js"
+
+
 export async function NormalLogin(event) {
     event.preventDefault()
     const formData = new FormData(event.currentTarget)
@@ -20,3 +23,8 @@ export async function NormalLogin(event) {
     return [true, await res.json()]
 
 }
+
+export const supabase = createClient(
+    import.meta.env.VITE_SUPABASE_URL,
+    import.meta.env.VITE_SUPABASE_ANON_KEY
+  );

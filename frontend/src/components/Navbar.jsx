@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import FloatingLogin from "./FloatingLogin";
 import { Link, useNavigate } from "react-router-dom";
 import useAuthStore from "../store/auth";
+import { supabase } from "../services/auth";
+import { AuthContext } from "../context/AuthContext";
+import { toast } from "react-toastify";
 
 export default function Navbar() {
   const [showPopup, setShowPopup] = useState(false);
   const [showForm, setShowForm] = useState(false)
 
-  const { user, token } = useAuthStore()
+  const { user } = useContext(AuthContext)
 
   const navigation = useNavigate()
 
@@ -29,6 +32,18 @@ export default function Navbar() {
     setShowForm(true)
   }
 
+  const handleLogout = async () => {
+    const {error} = await supabase.auth.signOut()
+
+    if (error) {
+      toast.error("Failed to logout try again", "top right")
+      return
+    }
+    
+    toast.success("Success logout", "top right")
+    window.location.reload()
+    
+  }
   return (
     <div className="max-w-[1300px] mx-auto py-6 flex justify-between items-center px-4">
 
@@ -87,12 +102,12 @@ export default function Navbar() {
             <Link className="px-6 h-max py-1 bg-gray-800 bg-opacity-0 hover:bg-opacity-100 hover:duration-500 hover:ease-out hover:cursor-pointer duration-500 ease-in" href="#">Profile</Link>
           </div>
           <div className="w-full min-w-[250px] border-b-[1px] border-gray-700 flex flex-col gap-y-4 py-6">
-            <a href="#" className="px-6 h-max py-1 bg-red-800 bg-opacity-0 hover:bg-opacity-100 hover:duration-500 hover:ease-out hover:cursor-pointer duration-500 ease-in">Logout</a>
+            <button onClick={handleLogout} className="px-6 h-max py-1 bg-red-800 bg-opacity-0 hover:bg-opacity-100 hover:duration-500 hover:ease-out hover:cursor-pointer duration-500 ease-in">Logout</button>
           </div>
         </motion.div>
           {/* popup */}
         
-        {token ? (
+        {user ? (
           <>
             <a
               onMouseEnter={() => setShowPopup(true)}
@@ -100,7 +115,7 @@ export default function Navbar() {
               href="#"
               className={`rounded-full overflow-hidden size-[40px] ${!user ? "bg-gray-600 animate-pulse" : ""} hover:cursor-pointer bg-red-500 relative`}
             >
-              <img src={user.avatar} alt="user-avatar" className="size-full aspect-video" />
+              <img src={user.user_metadata.avatar_url || user.user_metadata.picture} alt="user-avatar" className="size-full aspect-video" loading="lazy" referrerPolicy="no-referrer"/>
             </a>
 
             {/* popup */}
